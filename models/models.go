@@ -1,6 +1,9 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 type ReportSixMonth struct {
 	gorm.Model
@@ -17,6 +20,7 @@ type RegionTable_1 struct {
 	ItRoomsCount        int  `json:"it_rooms_count"`
 	FurnitureCount      int  `json:"furniture_count"`
 	LocalNet            bool `json:"local_net"`
+	ElectroLibCount     int  `json:"electro_lib_count"`
 	LibraryCount        int  `json:"library_count"`
 	MaterialsCount      int  `json:"materials_count"`
 	ItTeachersCount     int  `json:"it_teachers_count"`
@@ -25,6 +29,24 @@ type RegionTable_1 struct {
 	UnqualifiedCount    int  `json:"unqualified_count"`
 	CompleteCourseCount int  `json:"complete_course_count"`
 	RegionID            uint `json:"region_id"`
+}
+
+type RegionTable_1Archive struct {
+	Id                  uint      `gorm:"primaryKey"`
+	StudentsCount       int       `json:"students_Count"`
+	ItRoomsCount        int       `json:"it_rooms_count"`
+	FurnitureCount      int       `json:"furniture_count"`
+	LocalNet            bool      `json:"local_net"`
+	ElectroLibCount     int       `json:"electro_lib_count"`
+	LibraryCount        int       `json:"library_count"`
+	MaterialsCount      int       `json:"materials_count"`
+	ItTeachersCount     int       `json:"it_teachers_count"`
+	WithHighEduCount    int       `json:"with_high_edu_count"`
+	WithSecondEduCount  int       `json:"with_second_edu_count"`
+	UnqualifiedCount    int       `json:"unqualified_count"`
+	CompleteCourseCount int       `json:"complete_course_count"`
+	RegionID            uint      `json:"region_id"`
+	ArchivedAt          time.Time `json:"archived_at"`
 }
 
 type RegionTable_2 struct {

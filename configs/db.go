@@ -27,8 +27,9 @@ func InitDatabase() error {
 
 	DB.AutoMigrate(&models.ReportSixMonth{})
 	DB.AutoMigrate(&models.RegionTable_1{})
-	//DB.AutoMigrate(&models.SecondTable{})
-	//DB.AutoMigrate(&models.ThirdTable{})
-	//DB.AutoMigrate(&models.Foundations{})
+	DB.AutoMigrate(&models.RegionTable_1Archive{})
+	DB.AutoMigrate(&models.RegionTable_2{})
+	DB.AutoMigrate(&models.RegionTable_3{})
+	DB.AutoMigrate(&models.Foundations{})
 	return nil
 }
