@@ -148,3 +148,14 @@ func (h *Handler) GetRegions(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(regions)
 }
+
+func (h *Handler) GetAllSums(w http.ResponseWriter, r *http.Request) {
+	sums, err := h.Service.GetAllSums()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(sums)
+}

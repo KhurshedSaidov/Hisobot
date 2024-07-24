@@ -152,3 +152,85 @@ func (r *Repository) GetRegions() ([]models.ReportSixMonth, error) {
 	}
 	return regions, nil
 }
+
+type TableSums struct {
+	Table1 models.RegionTable_1
+	Table2 models.RegionTable_2
+	Table3 models.RegionTable_3
+	Table4 models.Foundations
+}
+
+func (r *Repository) GetAllSums() (TableSums, error) {
+	var sums TableSums
+
+	// Table 1
+	query1 := `
+    SELECT
+        SUM(students_count) as students_count,
+        SUM(it_rooms_count) as it_rooms_count,
+        SUM(furniture_count) as furniture_count,
+        SUM(electro_lib_count) as electro_lib_count,
+        SUM(materials_count) as materials_count,
+        SUM(it_teachers_count) as it_teachers_count,
+        SUM(with_high_edu_count) as with_high_edu_count,
+        SUM(with_second_edu_count) as with_second_edu_count,
+        SUM(unqualified_count) as unqualified_count,
+        SUM(complete_course_count) as complete_course_count,
+        SUM(library_count) as library_count
+    FROM region_table_1`
+	if err := r.DB.Raw(query1).Scan(&sums.Table1).Error; err != nil {
+		return sums, err
+	}
+
+	// Table 2
+	query2 := `
+    SELECT
+        SUM(schools_count) as schools_count,
+        SUM(computers_count) as computers_count,
+        SUM(learning_computers_count) as learning_computers_count,
+        SUM(repair_computer_count) as repair_computer_count,
+        SUM(broke_computer_count) as broke_computer_count,
+        SUM(decommissioned_computers_count) as decommissioned_computers_count,
+        SUM(purchased_computers_count) as purchased_computers_count,
+        SUM(license_computers_count) as license_computers_count,
+        SUM(printers_count) as printers_count,
+        SUM(broke_printers_count) as broke_printers_count,
+        SUM(scanners_count) as scanners_count,
+        SUM(connected_to_internet_count) as connected_to_internet_count,
+        SUM(electronic_boards_count) as electronic_boards_count,
+        SUM(projectors_count) as projectors_count,
+        SUM(website_count) as website_count
+    FROM region_table_2`
+	if err := r.DB.Raw(query2).Scan(&sums.Table2).Error; err != nil {
+		return sums, err
+	}
+
+	// Table 3
+	query3 := `
+    SELECT
+        SUM(computers_buy_plan) as computers_buy_plan,
+        SUM(computers_buy_plan_6_month) as computers_buy_plan_6_month,
+        SUM(boards_buy_plan_6_month) as boards_buy_plan_6_month,
+        SUM(boards_buy_6_month) as boards_buy_6_month,
+        SUM(video_projector_count) as video_projector_count,
+        SUM(printers_buy) as printers_buy,
+        SUM(ict_financing) as ict_financing
+    FROM region_table_3`
+	if err := r.DB.Raw(query3).Scan(&sums.Table3).Error; err != nil {
+		return sums, err
+	}
+
+	// Table 4
+	query4 := `
+    SELECT
+        SUM(computers_count) as computers_count,
+        SUM(boards_count) as boards_count,
+        SUM(projectors_count) as projectors_count,
+        SUM(printer_count) as printer_count
+    FROM foundations`
+	if err := r.DB.Raw(query4).Scan(&sums.Table4).Error; err != nil {
+		return sums, err
+	}
+
+	return sums, nil
+}

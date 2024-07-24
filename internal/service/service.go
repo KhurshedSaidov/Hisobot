@@ -120,3 +120,7 @@ func (s *Service) GetReportByRegionId(regionID uint) (*models.ReportSixMonth, er
 func (s *Service) GetAllRegions() ([]models.ReportSixMonth, error) {
 	return s.Repository.GetRegions()
 }
+
+func (s *Service) GetAllSums() (repository.TableSums, error) {
+	return s.Repository.GetAllSums()
+}
