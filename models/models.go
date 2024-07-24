@@ -70,8 +70,30 @@ type RegionTable_2 struct {
 	RegionID                     uint   `json:"region_id"`
 }
 
+type RegionTable_2Archive struct {
+	Id                           uint      `gorm:"primarykey"`
+	SchoolsCount                 int       `json:"schools_count"`
+	ComputersCount               int       `json:"computers_count"`
+	LearningComputersCount       int       `json:"learning_computers_count"`
+	RepairComputerCount          int       `json:"repair_computer_count"`
+	BrokeComputerCount           int       `json:"broke_computer_count"`
+	DecommissionedComputersCount int       `json:"decommissioned_computers_count"`
+	PurchasedComputersCount      int       `json:"purchased_computers_count"`
+	LicenseComputersCount        int       `json:"license_computers_count"`
+	PrintersCount                int       `json:"printers_count"`
+	BrokePrintersCount           int       `json:"broke_printers_count"`
+	ScannersCount                int       `json:"scanners_count"`
+	ConnectedToInternetCount     int       `json:"connected_to_internet_count"`
+	ConnectionType               string    `json:"connection_type"`
+	ElectronicBoardsCount        int       `json:"electronic_boards_count"`
+	ProjectorsCount              int       `json:"projectors_count"`
+	WebsiteCount                 int       `json:"website_count"`
+	RegionID                     uint      `json:"region_id"`
+	ArchivedAt                   time.Time `json:"archived_at"`
+}
+
 type RegionTable_3 struct {
-	Id                     uint    `gorm:"unique"`
+	Id                     uint    `gorm:"primaryKey"`
 	ComputersBuyPlan       int     `json:"computers_buy_plan"`
 	ComputersBuyPlan6Month int     `json:"computers_buy_plan_6_month"`
 	BoardsBuyPlan6Month    int     `json:"boards_buy_plan_6_month"`
@@ -83,14 +105,39 @@ type RegionTable_3 struct {
 	RegionID               uint    `json:"region_id"`
 }
 
+type RegionTable_3Archive struct {
+	Id                     uint      `gorm:"primaryKey"`
+	ComputersBuyPlan       int       `json:"computers_buy_plan"`
+	ComputersBuyPlan6Month int       `json:"computers_buy_plan_6_month"`
+	BoardsBuyPlan6Month    int       `json:"boards_buy_plan_6_month"`
+	BoardsBuy6Month        int       `json:"boards_buy_6_month"`
+	BoardsBuyPercent       float64   `json:"boards_buy_percent"`
+	VideoProjectorCount    int       `json:"video_projector_count"`
+	PrintersBuy            int       `json:"printers_buy"`
+	IctFinancing           int       `json:"ict_financing"`
+	RegionID               uint      `json:"region_id"`
+	ArchivedAt             time.Time `json:"archived_at"`
+}
+
 type Foundations struct {
-	Id              uint   `gorm:"unique"`
+	Id              uint   `gorm:"primaryKey"`
 	Foundation      string `json:"foundation"`
 	ComputersCount  int    `json:"computers_count"`
 	BoardsCount     int    `json:"boards_count"`
 	ProjectorsCount int    `json:"projectors_count"`
 	PrinterCount    int    `json:"printer_count"`
 	RegionID        uint   `json:"region_id"`
+}
+
+type FoundationsArchive struct {
+	Id              uint      `gorm:"primaryKey"`
+	Foundation      string    `json:"foundation"`
+	ComputersCount  int       `json:"computers_count"`
+	BoardsCount     int       `json:"boards_count"`
+	ProjectorsCount int       `json:"projectors_count"`
+	PrinterCount    int       `json:"printer_count"`
+	RegionID        uint      `json:"region_id"`
+	ArchivedAt      time.Time `json:"archived_at"`
 }
 
 type Server struct {

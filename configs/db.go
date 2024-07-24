@@ -29,7 +29,10 @@ func InitDatabase() error {
 	DB.AutoMigrate(&models.RegionTable_1{})
 	DB.AutoMigrate(&models.RegionTable_1Archive{})
 	DB.AutoMigrate(&models.RegionTable_2{})
+	DB.AutoMigrate(&models.RegionTable_2Archive{})
 	DB.AutoMigrate(&models.RegionTable_3{})
+	DB.AutoMigrate(&models.RegionTable_3Archive{})
 	DB.AutoMigrate(&models.Foundations{})
+	DB.AutoMigrate(&models.FoundationsArchive{})
 	return nil
 }
