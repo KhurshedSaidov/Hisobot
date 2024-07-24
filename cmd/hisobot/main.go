@@ -14,6 +14,7 @@ import (
 func InitRouters(handler *handlers.Handler) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/get", handler.GetRegions).Methods("GET")
+	r.HandleFunc("/avg", handler.GetAllSums).Methods("GET")
 	r.HandleFunc("/get/{id}", handler.GetReportWithRegion).Methods("GET")
 	r.HandleFunc("/table1/{id}", handler.UpdateFirstTable).Methods("PUT")
 	r.HandleFunc("/table2/{id}", handler.UpdateSecondTable).Methods("PUT")
