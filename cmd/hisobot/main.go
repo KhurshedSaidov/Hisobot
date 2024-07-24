@@ -15,7 +15,10 @@ func InitRouters(handler *handlers.Handler) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/get", handler.GetRegions).Methods("GET")
 	r.HandleFunc("/get/{id}", handler.GetReportWithRegion).Methods("GET")
-	r.HandleFunc("/get/{region_id}/{id}", handler.UpdateFirstTable).Methods("PUT")
+	r.HandleFunc("/table1/{id}", handler.UpdateFirstTable).Methods("PUT")
+	r.HandleFunc("/table2/{id}", handler.UpdateSecondTable).Methods("PUT")
+	r.HandleFunc("/table3/{id}", handler.UpdateThirdTable).Methods("PUT")
+	r.HandleFunc("/table4/{region_id}/{id}", handler.UpdateFoundations).Methods("PUT")
 
 	return r
 }
