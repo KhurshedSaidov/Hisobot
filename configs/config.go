@@ -12,7 +12,7 @@ type Config struct {
 }
 
 func InitConfigs() (*Config, error) {
-	bytes, err := os.ReadFile("/root/Hisobot/configs/config.json")
+	bytes, err := os.ReadFile("C:\\Users\\user\\Desktop\\work\\projects\\Hisobot\\configs\\config.json")
 	if err != nil {
 		return nil, err
 	}

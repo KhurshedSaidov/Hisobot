@@ -154,10 +154,18 @@ func (r *Repository) GetRegions() ([]models.ReportSixMonth, error) {
 }
 
 type TableSums struct {
-	Table1 models.RegionTable_1
-	Table2 models.RegionTable_2
-	Table3 models.RegionTable_3
-	Table4 models.Foundations
+	Table1      models.RegionTable_1
+	Table2      models.RegionTable_2
+	Table3      models.RegionTable_3
+	Foundations []models.Foundations
+}
+
+type FoundationSums struct {
+	Foundation      string `json:"foundation"`
+	ComputersCount  int    `json:"computers_count"`
+	BoardsCount     int    `json:"boards_count"`
+	ProjectorsCount int    `json:"projectors_count"`
+	PrinterCount    int    `json:"printer_count"`
 }
 
 func (r *Repository) GetAllSums() (TableSums, error) {
@@ -223,12 +231,14 @@ func (r *Repository) GetAllSums() (TableSums, error) {
 	// Table 4
 	query4 := `
     SELECT
+        foundation,
         SUM(computers_count) as computers_count,
         SUM(boards_count) as boards_count,
         SUM(projectors_count) as projectors_count,
         SUM(printer_count) as printer_count
-    FROM foundations`
-	if err := r.DB.Raw(query4).Scan(&sums.Table4).Error; err != nil {
+    FROM foundations
+    GROUP BY foundation`
+	if err := r.DB.Raw(query4).Scan(&sums.Foundations).Error; err != nil {
 		return sums, err
 	}
 
