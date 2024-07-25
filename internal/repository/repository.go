@@ -262,8 +262,10 @@ func (r *Repository) GetAllSums() (TableSums, error) {
     SELECT
         SUM(computers_buy_plan) as computers_buy_plan,
         SUM(computers_buy_plan6_month) as computers_buy_plan_6_month,
+        AVG(computers_buy_percent) as computers_buy_percent,
         SUM(boards_buy_plan6_month) as boards_buy_plan_6_month,
         SUM(boards_buy6_month) as boards_buy_6_month,
+        AVG(boards_buy_percent) as boards_buy_percent,
         SUM(video_projector_count) as video_projector_count,
         SUM(printers_buy) as printers_buy,
         SUM(ict_financing) as ict_financing

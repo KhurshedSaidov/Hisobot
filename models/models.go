@@ -96,6 +96,7 @@ type RegionTable_3 struct {
 	Id                     uint    `gorm:"primaryKey"`
 	ComputersBuyPlan       int     `json:"computers_buy_plan"`
 	ComputersBuyPlan6Month int     `json:"computers_buy_plan_6_month"`
+	ComputersBuyPercent    float64 `json:"computers_buy_percent"`
 	BoardsBuyPlan6Month    int     `json:"boards_buy_plan_6_month"`
 	BoardsBuy6Month        int     `json:"boards_buy_6_month"`
 	BoardsBuyPercent       float64 `json:"boards_buy_percent"`
@@ -109,6 +110,7 @@ type RegionTable_3Archive struct {
 	Id                     uint      `gorm:"primaryKey"`
 	ComputersBuyPlan       int       `json:"computers_buy_plan"`
 	ComputersBuyPlan6Month int       `json:"computers_buy_plan_6_month"`
+	ComputersBuyPercent    float64   `json:"computers_buy_percent"`
 	BoardsBuyPlan6Month    int       `json:"boards_buy_plan_6_month"`
 	BoardsBuy6Month        int       `json:"boards_buy_6_month"`
 	BoardsBuyPercent       float64   `json:"boards_buy_percent"`
