@@ -226,3 +226,24 @@ func (h *Handler) DeleteInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *Handler) GetRegionsByRegionID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	regionIDStr := vars["region_id"]
+	regionID, err := strconv.Atoi(regionIDStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Invalid region ID"))
+		return
+	}
+
+	regions, err := h.Service.GetRegionsByRegionID(uint(regionID))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving regions"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(regions)
+}

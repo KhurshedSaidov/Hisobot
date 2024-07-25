@@ -170,3 +170,7 @@ func (s *Service) CreateInfo(school, nameSurname, specialization, whereGraduate 
 func (s *Service) DeleteInfo(id uint) error {
 	return s.Repository.DeleteInfo(id)
 }
+
+func (s *Service) GetRegionsByRegionID(regionID uint) ([]repository.RegionWithTeacherInfo, error) {
+	return s.Repository.GetRegionsByRegionID(regionID)
+}

@@ -179,6 +179,24 @@ func (r *Repository) GetRegions() ([]models.ReportSixMonth, error) {
 	return regions, nil
 }
 
+type RegionWithTeacherInfo struct {
+	models.Regions
+	TeacherRegion string `json:"teacher_region"`
+}
+
+func (r *Repository) GetRegionsByRegionID(regionID uint) ([]RegionWithTeacherInfo, error) {
+	var regionsWithInfo []RegionWithTeacherInfo
+	result := r.DB.Table("regions").
+		Select("regions.*, information_about_it_teachers_2023.region as teacher_region").
+		Joins("left join information_about_it_teachers_2023 on regions.region_id = information_about_it_teachers_2023.id").
+		Where("regions.region_id = ?", regionID).
+		Scan(&regionsWithInfo)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return regionsWithInfo, nil
+}
+
 type TableSums struct {
 	Table1      models.RegionTable_1
 	Table2      models.RegionTable_2
