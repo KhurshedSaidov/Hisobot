@@ -113,6 +113,30 @@ func (s *Service) UpdateFoundations(id uint, foundation string, computersCount, 
 	return s.Repository.UpdateFoundations(report)
 }
 
+func (s *Service) UpdateInfo(id uint, school, nameSurname, specialization, whereGraduate string,
+	whenGraduate, workExperience, birthYear int, education, phoneNumber string) error {
+	info, err := s.Repository.GetInfo(id)
+	if err != nil {
+		return err
+	}
+
+	if err := s.Repository.ArchiveInfo(info); err != nil {
+		return err
+	}
+	info.School = school
+	info.NameSurname = nameSurname
+	info.Specialization = specialization
+	info.WhereGraduate = whereGraduate
+	info.WhenGraduate = whenGraduate
+	info.WorkExperience = workExperience
+	info.BirthYear = birthYear
+	info.Education = education
+	info.PhoneNumber = phoneNumber
+
+	return s.Repository.UpdateInfo(info)
+
+}
+
 func (s *Service) GetReportByRegionId(regionID uint) (*models.ReportSixMonth, error) {
 	return s.Repository.GetReportByRegionId(regionID)
 }
@@ -123,4 +147,26 @@ func (s *Service) GetAllRegions() ([]models.ReportSixMonth, error) {
 
 func (s *Service) GetAllSums() (repository.TableSums, error) {
 	return s.Repository.GetAllSums()
+}
+
+func (s *Service) CreateInfo(school, nameSurname, specialization, whereGraduate string,
+	whenGraduate, workExperience, birthYear int, education, phoneNumber string, regionID uint) error {
+	info := &models.Regions{
+		School:         school,
+		NameSurname:    nameSurname,
+		Specialization: specialization,
+		WhereGraduate:  whereGraduate,
+		WhenGraduate:   whenGraduate,
+		WorkExperience: workExperience,
+		BirthYear:      birthYear,
+		Education:      education,
+		PhoneNumber:    phoneNumber,
+		RegionID:       regionID,
+	}
+
+	return s.Repository.CreateInfo(info)
+}
+
+func (s *Service) DeleteInfo(id uint) error {
+	return s.Repository.DeleteInfo(id)
 }

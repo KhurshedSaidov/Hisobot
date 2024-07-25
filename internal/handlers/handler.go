@@ -120,6 +120,31 @@ func (h *Handler) UpdateFoundations(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func (h *Handler) UpdateInfoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	ID, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var payload models.Regions
+
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := h.Service.UpdateInfo(uint(ID), payload.School, payload.NameSurname, payload.Specialization,
+		payload.WhereGraduate, payload.WhenGraduate, payload.WorkExperience, payload.BirthYear, payload.Education,
+		payload.PhoneNumber); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func (h *Handler) GetReportWithRegion(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	regionId, err := strconv.ParseUint(vars["id"], 10, 64)
@@ -158,4 +183,46 @@ func (h *Handler) GetAllSums(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(sums)
+}
+
+func (h *Handler) CreateInfoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	regionId, err := strconv.ParseUint(vars["region_id"], 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	var info models.Regions
+	if err := json.NewDecoder(r.Body).Decode(&info); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := h.Service.CreateInfo(info.School, info.NameSurname, info.Specialization, info.WhereGraduate,
+		info.WhenGraduate, info.WorkExperience, info.BirthYear, info.Education, info.PhoneNumber, uint(regionId)); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Информация добавлена!"))
+}
+
+func (h *Handler) DeleteInfoHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Неверно указан идентификатор id"))
+		return
+	}
+
+	err = h.Service.DeleteInfo(uint(id))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

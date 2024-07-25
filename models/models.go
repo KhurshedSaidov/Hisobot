@@ -140,6 +140,41 @@ type FoundationsArchive struct {
 	ArchivedAt      time.Time `json:"archived_at"`
 }
 
+type InformationAboutItTeachers_2023 struct {
+	Id      uint      `gorm:"primaryKey"`
+	Region  string    `json:"region"`
+	Regions []Regions `gorm:"foreignKey:RegionID"`
+}
+
+type Regions struct {
+	Id             uint   `gorm:"primaryKey"`
+	School         string `json:"school"`
+	NameSurname    string `json:"name_surname"`
+	Specialization string `json:"specialization"`
+	WhereGraduate  string `json:"where_graduate"`
+	WhenGraduate   int    `json:"when_graduate"`
+	WorkExperience int    `json:"work_experience"`
+	BirthYear      int    `json:"birth_year"`
+	Education      string `json:"education"`
+	PhoneNumber    string `json:"phone_number"`
+	RegionID       uint   `json:"region_id"`
+}
+
+type RegionsArchive struct {
+	Id             uint      `gorm:"primaryKey"`
+	School         string    `json:"school"`
+	NameSurname    string    `json:"name_surname"`
+	Specialization string    `json:"specialization"`
+	WhereGraduate  string    `json:"where_graduate"`
+	WhenGraduate   int       `json:"when_graduate"`
+	WorkExperience int       `json:"work_experience"`
+	BirthYear      int       `json:"birth_year"`
+	Education      string    `json:"education"`
+	PhoneNumber    string    `json:"phone_number"`
+	RegionID       uint      `json:"region_id"`
+	ArchivedAt     time.Time `json:"archived_at"`
+}
+
 type Server struct {
 	Host string `json:"host"`
 	Port string `json:"port"`

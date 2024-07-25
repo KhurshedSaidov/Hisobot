@@ -50,6 +50,15 @@ func (r *Repository) GetReportFromFoundationsById(id, regionId uint) (*models.Fo
 	return &report, nil
 }
 
+func (r *Repository) GetInfo(id uint) (*models.Regions, error) {
+	var info models.Regions
+	err := r.DB.Where("id = ?", id).First(&info).Error
+	if err != nil {
+		return nil, err
+	}
+	return &info, nil
+}
+
 func (r *Repository) UpdateFirstTable(table1 *models.RegionTable_1) error {
 	return r.DB.Save(table1).Error
 }
@@ -139,6 +148,23 @@ func (r *Repository) ArchiveFoundations(report *models.Foundations) error {
 	return r.DB.Create(&archive).Error
 }
 
+func (r *Repository) ArchiveInfo(info *models.Regions) error {
+	archive := models.RegionsArchive{
+		School:         info.School,
+		NameSurname:    info.NameSurname,
+		Specialization: info.Specialization,
+		WhereGraduate:  info.WhereGraduate,
+		WhenGraduate:   info.WhenGraduate,
+		WorkExperience: info.WorkExperience,
+		BirthYear:      info.BirthYear,
+		Education:      info.Education,
+		PhoneNumber:    info.PhoneNumber,
+		RegionID:       info.RegionID,
+		ArchivedAt:     time.Now(),
+	}
+	return r.DB.Create(&archive).Error
+}
+
 func (r *Repository) GetReportByRegionId(regionId uint) (*models.ReportSixMonth, error) {
 	var report models.ReportSixMonth
 	err := r.DB.Preload("RegionTables1").Preload("RegionTables2").Preload("RegionTables3").Preload("Foundations").First(&report, regionId).Error
@@ -217,9 +243,9 @@ func (r *Repository) GetAllSums() (TableSums, error) {
 	query3 := `
     SELECT
         SUM(computers_buy_plan) as computers_buy_plan,
-        SUM(computers_buy_plan_6_month) as computers_buy_plan_6_month,
-        SUM(boards_buy_plan_6_month) as boards_buy_plan_6_month,
-        SUM(boards_buy_6_month) as boards_buy_6_month,
+        SUM(computers_buy_plan6_month) as computers_buy_plan_6_month,
+        SUM(boards_buy_plan6_month) as boards_buy_plan_6_month,
+        SUM(boards_buy6_month) as boards_buy_6_month,
         SUM(video_projector_count) as video_projector_count,
         SUM(printers_buy) as printers_buy,
         SUM(ict_financing) as ict_financing
@@ -243,4 +269,17 @@ func (r *Repository) GetAllSums() (TableSums, error) {
 	}
 
 	return sums, nil
+}
+
+func (r *Repository) CreateInfo(info *models.Regions) error {
+	return r.DB.Create(info).Error
+}
+
+func (r *Repository) UpdateInfo(info *models.Regions) error {
+	return r.DB.Save(info).Error
+}
+
+func (r *Repository) DeleteInfo(id uint) error {
+	info := &models.Regions{}
+	return r.DB.Where("id = ?", id).Delete(info).Error
 }

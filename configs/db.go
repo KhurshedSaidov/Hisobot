@@ -34,5 +34,8 @@ func InitDatabase() error {
 	DB.AutoMigrate(&models.RegionTable_3Archive{})
 	DB.AutoMigrate(&models.Foundations{})
 	DB.AutoMigrate(&models.FoundationsArchive{})
+	DB.AutoMigrate(&models.InformationAboutItTeachers_2023{})
+	DB.AutoMigrate(&models.Regions{})
+	DB.AutoMigrate(&models.RegionsArchive{})
 	return nil
 }
