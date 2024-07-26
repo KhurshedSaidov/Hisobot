@@ -20,6 +20,7 @@ func InitRouters(handler *handlers.Handler) *mux.Router {
 	r.HandleFunc("/table2/{id}", handler.UpdateSecondTable).Methods("PUT")
 	r.HandleFunc("/table3/{id}", handler.UpdateThirdTable).Methods("PUT")
 	r.HandleFunc("/table4/{region_id}/{id}", handler.UpdateFoundations).Methods("PUT")
+	r.HandleFunc("/info", handler.GetAllRegionsHandler).Methods("GET")
 	r.HandleFunc("/info/{region_id}", handler.CreateInfoHandler).Methods("POST")
 	r.HandleFunc("/info/{region_id}", handler.GetRegionsByRegionID).Methods("GET")
 	r.HandleFunc("/info/{id}", handler.UpdateInfoHandler).Methods("PUT")
@@ -48,6 +49,8 @@ func Run() error {
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
 	})
 
 	handler := c.Handler(router)

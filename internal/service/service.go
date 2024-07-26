@@ -145,6 +145,10 @@ func (s *Service) GetAllRegions() ([]models.ReportSixMonth, error) {
 	return s.Repository.GetRegions()
 }
 
+func (s *Service) GetInfoRegions() ([]models.InformationAboutItTeachers_2023, error) {
+	return s.Repository.GetAllRegions()
+}
+
 func (s *Service) GetAllSums() (repository.TableSums, error) {
 	return s.Repository.GetAllSums()
 }

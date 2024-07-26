@@ -185,6 +185,17 @@ func (h *Handler) GetAllSums(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(sums)
 }
 
+func (h *Handler) GetAllRegionsHandler(w http.ResponseWriter, r *http.Request) {
+	regions, err := h.Service.GetInfoRegions()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(regions)
+}
+
 func (h *Handler) CreateInfoHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	regionId, err := strconv.ParseUint(vars["region_id"], 10, 64)

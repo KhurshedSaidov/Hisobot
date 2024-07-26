@@ -179,6 +179,14 @@ func (r *Repository) GetRegions() ([]models.ReportSixMonth, error) {
 	return regions, nil
 }
 
+func (r *Repository) GetAllRegions() ([]models.InformationAboutItTeachers_2023, error) {
+	var regions []models.InformationAboutItTeachers_2023
+	if err := r.DB.Find(&regions).Error; err != nil {
+		return nil, err
+	}
+	return regions, nil
+}
+
 type RegionWithTeacherInfo struct {
 	models.Regions
 	TeacherRegion string `json:"teacher_region"`
