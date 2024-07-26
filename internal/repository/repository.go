@@ -95,6 +95,67 @@ func (r *Repository) ArchiveFirstTable(report *models.RegionTable_1) error {
 	return r.DB.Create(&archive).Error
 }
 
+func (r *Repository) GetRegionTable1Archive() ([]models.RegionTable_1Archive, error) {
+	var archives []models.RegionTable_1Archive
+	result := r.DB.Find(&archives)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetRegionTable2Archive() ([]models.RegionTable_2Archive, error) {
+	var archives []models.RegionTable_2Archive
+	result := r.DB.Find(&archives)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetRegionTable3Archive() ([]models.RegionTable_3Archive, error) {
+	var archives []models.RegionTable_3Archive
+	result := r.DB.Find(&archives)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetFoundationArchive() ([]models.FoundationsArchive, error) {
+	var archives []models.FoundationsArchive
+	result := r.DB.Find(&archives)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetInfoArchives() ([]models.RegionsArchive, error) {
+	var archives []models.RegionsArchive
+	result := r.DB.Find(&archives)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetArchivedTotalComputersCounts() ([]models.TotalComputersCountArchive, error) {
+	var archives []models.TotalComputersCountArchive
+	if err := r.DB.Find(&archives).Error; err != nil {
+		return nil, err
+	}
+	return archives, nil
+}
+
+func (r *Repository) GetArchivedComputerModelTypes(totalPCId uint) ([]models.ComputerModelTypeArchive, error) {
+	var archives []models.ComputerModelTypeArchive
+	if err := r.DB.Where("total_pc_id = ?", totalPCId).Find(&archives).Error; err != nil {
+		return nil, err
+	}
+	return archives, nil
+}
+
 func (r *Repository) ArchiveSecondTable(report *models.RegionTable_2) error {
 	archive := models.RegionTable_2Archive{
 		SchoolsCount:                 report.SchoolsCount,
@@ -165,6 +226,45 @@ func (r *Repository) ArchiveInfo(info *models.Regions) error {
 	return r.DB.Create(&archive).Error
 }
 
+func (r *Repository) ArchiveTotalComputersCount(info *models.TotalComputersCount) error {
+	archive := models.TotalComputersCountArchive{
+		School:                info.School,
+		TotalCompCount:        info.TotalCompCount,
+		TotalWorkingCompCount: info.TotalWorkingCompCount,
+		TotalRepairCompCount:  info.TotalRepairCompCount,
+		TotalBrokenCompCount:  info.TotalBrokenCompCount,
+		ComputersNeed:         info.ComputersNeed,
+		Trash:                 info.Trash,
+		RegionId:              info.RegionId,
+		ArchivedAt:            time.Now(),
+	}
+	if err := r.DB.Create(&archive).Error; err != nil {
+		return err
+	}
+
+	// Архивирование связанных данных ComputerModelType
+	var modelsToArchive []models.ComputerModelType
+	if err := r.DB.Where("total_pc_id = ?", info.Id).Find(&modelsToArchive).Error; err != nil {
+		return err
+	}
+
+	// Создаем архивные записи для каждой ComputerModelType
+	for _, model := range modelsToArchive {
+		archiveModel := models.ComputerModelTypeArchive{
+			PintiumDDR: model.PintiumDDR,
+			Monoblock:  model.Monoblock,
+			Laptop:     model.Laptop,
+			TotalPCId:  archive.Id, // Используем ID архивной записи TotalComputersCount
+			ArchivedAt: time.Now(),
+		}
+		if err := r.DB.Create(&archiveModel).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r *Repository) GetReportByRegionId(regionId uint) (*models.ReportSixMonth, error) {
 	var report models.ReportSixMonth
 	err := r.DB.Preload("RegionTables1").Preload("RegionTables2").Preload("RegionTables3").Preload("Foundations").First(&report, regionId).Error
@@ -173,14 +273,6 @@ func (r *Repository) GetReportByRegionId(regionId uint) (*models.ReportSixMonth,
 
 func (r *Repository) GetRegions() ([]models.ReportSixMonth, error) {
 	var regions []models.ReportSixMonth
-	if err := r.DB.Find(&regions).Error; err != nil {
-		return nil, err
-	}
-	return regions, nil
-}
-
-func (r *Repository) GetAllRegions() ([]models.InformationAboutItTeachers_2023, error) {
-	var regions []models.InformationAboutItTeachers_2023
 	if err := r.DB.Find(&regions).Error; err != nil {
 		return nil, err
 	}
@@ -299,6 +391,14 @@ func (r *Repository) GetAllSums() (TableSums, error) {
 	return sums, nil
 }
 
+func (r *Repository) GetAllRegions() ([]models.InformationAboutItTeachers_2023, error) {
+	var regions []models.InformationAboutItTeachers_2023
+	if err := r.DB.Find(&regions).Error; err != nil {
+		return nil, err
+	}
+	return regions, nil
+}
+
 func (r *Repository) CreateInfo(info *models.Regions) error {
 	return r.DB.Create(info).Error
 }
@@ -310,4 +410,68 @@ func (r *Repository) UpdateInfo(info *models.Regions) error {
 func (r *Repository) DeleteInfo(id uint) error {
 	info := &models.Regions{}
 	return r.DB.Where("id = ?", id).Delete(info).Error
+}
+
+func (r *Repository) GetPcRegions() ([]models.TotalComputersCountRegions, error) {
+	var regions []models.TotalComputersCountRegions
+	if err := r.DB.Find(&regions).Error; err != nil {
+		return nil, err
+	}
+	return regions, nil
+}
+
+func (r *Repository) CreateTotalComputersCount(totalComputersCount *models.TotalComputersCount) error {
+	return r.DB.Create(totalComputersCount).Error
+}
+
+func (r *Repository) CreateComputersModelType(computerModelsType *models.ComputerModelType) error {
+	return r.DB.Save(computerModelsType).Error
+}
+
+func (r *Repository) UpdateTotalComputersCount(totalComputersCount *models.TotalComputersCount) error {
+	return r.DB.Transaction(func(tx *gorm.DB) error {
+		var existing models.TotalComputersCount
+		if err := tx.Where("id = ?", totalComputersCount.Id).First(&existing).Error; err != nil {
+			return err
+		}
+
+		if err := r.ArchiveTotalComputersCount(&existing); err != nil {
+			return err
+		}
+
+		if err := tx.Model(&existing).Updates(totalComputersCount).Error; err != nil {
+			return err
+		}
+
+		for _, compModel := range totalComputersCount.CompModel {
+			if err := tx.Where("id = ?", compModel.Id).Updates(&compModel).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+}
+
+func (r *Repository) GetCompCountByRegionID(regionID uint) ([]models.TotalComputersCount, error) {
+	var totalComputersCounts []models.TotalComputersCount
+	err := r.DB.Preload("CompModel").Where("region_id = ?", regionID).Find(&totalComputersCounts).Error
+	if err != nil {
+		return nil, err
+	}
+	return totalComputersCounts, nil
+}
+
+func (r *Repository) DeleteTotalComputersCount(id uint) error {
+	// Сначала удалите связанные записи
+	if err := r.DB.Where("total_pc_id = ?", id).Delete(&models.ComputerModelType{}).Error; err != nil {
+		return err
+	}
+
+	// Теперь удалите основную запись
+	result := r.DB.Delete(&models.TotalComputersCount{}, id)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }

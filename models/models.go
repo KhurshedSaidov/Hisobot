@@ -177,6 +177,56 @@ type RegionsArchive struct {
 	ArchivedAt     time.Time `json:"archived_at"`
 }
 
+type TotalComputersCountRegions struct {
+	Id                 uint                  `gorm:"primaryKey"`
+	Regions            string                `json:"regions"`
+	TotalComputerCount []TotalComputersCount `gorm:"foreignKey:RegionId"`
+}
+
+type TotalComputersCount struct {
+	Id                    uint                `gorm:"primaryKey"`
+	School                string              `json:"school"`
+	TotalCompCount        int                 `json:"total_comp_count"`
+	TotalWorkingCompCount int                 `json:"total_working_comp_count"`
+	TotalRepairCompCount  int                 `json:"total_repair_comp_count"`
+	TotalBrokenCompCount  int                 `json:"total_broken_comp_count"`
+	CompModel             []ComputerModelType `gorm:"foreignKey:TotalPCId;constraint:OnDelete:CASCADE;"`
+	ComputersNeed         int                 `json:"computers_need"`
+	Trash                 int                 `json:"trash"`
+	RegionId              uint                `json:"region_id"`
+}
+
+type TotalComputersCountArchive struct {
+	Id                    uint                       `gorm:"primaryKey"`
+	School                string                     `json:"school"`
+	TotalCompCount        int                        `json:"total_comp_count"`
+	TotalWorkingCompCount int                        `json:"total_working_comp_count"`
+	TotalRepairCompCount  int                        `json:"total_repair_comp_count"`
+	TotalBrokenCompCount  int                        `json:"total_broken_comp_count"`
+	CompModel             []ComputerModelTypeArchive `json:"computer_model_types" gorm:"foreignKey:TotalPCId"`
+	ComputersNeed         int                        `json:"computers_need"`
+	Trash                 int                        `json:"trash"`
+	RegionId              uint                       `json:"region_id"`
+	ArchivedAt            time.Time                  `json:"archived_at"`
+}
+
+type ComputerModelType struct {
+	Id         uint `gorm:"primaryKey;autoIncrement"`
+	PintiumDDR int  `json:"pintium_ddr"`
+	Monoblock  int  `json:"monoblock"`
+	Laptop     int  `json:"laptop"`
+	TotalPCId  uint `json:"total_pc_id"`
+}
+
+type ComputerModelTypeArchive struct {
+	Id         uint      `gorm:"primaryKey;autoIncrement"`
+	PintiumDDR int       `json:"pintium_ddr"`
+	Monoblock  int       `json:"monoblock"`
+	Laptop     int       `json:"laptop"`
+	TotalPCId  uint      `json:"total_pc_id"`
+	ArchivedAt time.Time `json:"archived_at"`
+}
+
 type Server struct {
 	Host string `json:"host"`
 	Port string `json:"port"`

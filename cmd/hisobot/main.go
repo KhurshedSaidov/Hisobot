@@ -24,11 +24,18 @@ func InitRouters(handler *handlers.Handler) *mux.Router {
 	r.HandleFunc("/archive/table2", handler.GetRegionTable2Archive).Methods("GET")
 	r.HandleFunc("/archive/table3", handler.GetRegionTable3Archive).Methods("GET")
 	r.HandleFunc("/archive/foundations", handler.GetFoundationArchive).Methods("GET")
+	r.HandleFunc("/archive/info", handler.GetInfoArchivesHandler).Methods("GET")
+	r.HandleFunc("/archives/total-computers-counts", handler.GetArchivedTotalComputersCounts).Methods("GET")
+	r.HandleFunc("/archives/computer-model-types/{totalPCId}", handler.GetArchivedComputerModelTypes).Methods("GET")
 	r.HandleFunc("/info", handler.GetAllRegionsHandler).Methods("GET")
 	r.HandleFunc("/info/{region_id}", handler.CreateInfoHandler).Methods("POST")
 	r.HandleFunc("/info/{region_id}", handler.GetRegionsByRegionID).Methods("GET")
 	r.HandleFunc("/info/{id}", handler.UpdateInfoHandler).Methods("PUT")
 	r.HandleFunc("/info/{id}", handler.DeleteInfoHandler).Methods("DELETE")
+	r.HandleFunc("/total-computers", handler.CreateTotalComputersCount).Methods("POST")
+	r.HandleFunc("/total-computers/{region_id}", handler.GetCompCountByRegionID).Methods("GET")
+	r.HandleFunc("/total-computers/{id}", handler.UpdateTotalComputersCount).Methods("PUT")
+	r.HandleFunc("/total-computers/{id}", handler.DeleteTotalComputersCount).Methods("DELETE")
 
 	return r
 }

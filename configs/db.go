@@ -37,5 +37,10 @@ func InitDatabase() error {
 	DB.AutoMigrate(&models.InformationAboutItTeachers_2023{})
 	DB.AutoMigrate(&models.Regions{})
 	DB.AutoMigrate(&models.RegionsArchive{})
+	DB.AutoMigrate(&models.TotalComputersCountRegions{})
+	DB.AutoMigrate(&models.TotalComputersCount{})
+	DB.AutoMigrate(&models.TotalComputersCountArchive{})
+	DB.AutoMigrate(&models.ComputerModelTypeArchive{})
+	DB.AutoMigrate(&models.ComputerModelType{})
 	return nil
 }

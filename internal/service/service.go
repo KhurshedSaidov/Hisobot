@@ -137,6 +137,34 @@ func (s *Service) UpdateInfo(id uint, school, nameSurname, specialization, where
 
 }
 
+func (s *Service) GetRegionTable1Archive() ([]models.RegionTable_1Archive, error) {
+	return s.Repository.GetRegionTable1Archive()
+}
+
+func (s *Service) GetRegionTable2Archive() ([]models.RegionTable_2Archive, error) {
+	return s.Repository.GetRegionTable2Archive()
+}
+
+func (s *Service) GetRegionTable3Archive() ([]models.RegionTable_3Archive, error) {
+	return s.Repository.GetRegionTable3Archive()
+}
+
+func (s *Service) GetFoundationArchive() ([]models.FoundationsArchive, error) {
+	return s.Repository.GetFoundationArchive()
+}
+
+func (s *Service) GetInfoArchives() ([]models.RegionsArchive, error) {
+	return s.Repository.GetInfoArchives()
+}
+
+func (s *Service) GetArchivedTotalComputersCounts() ([]models.TotalComputersCountArchive, error) {
+	return s.Repository.GetArchivedTotalComputersCounts()
+}
+
+func (s *Service) GetArchivedComputerModelTypes(totalPCId uint) ([]models.ComputerModelTypeArchive, error) {
+	return s.Repository.GetArchivedComputerModelTypes(totalPCId)
+}
+
 func (s *Service) GetReportByRegionId(regionID uint) (*models.ReportSixMonth, error) {
 	return s.Repository.GetReportByRegionId(regionID)
 }
@@ -147,6 +175,10 @@ func (s *Service) GetAllRegions() ([]models.ReportSixMonth, error) {
 
 func (s *Service) GetInfoRegions() ([]models.InformationAboutItTeachers_2023, error) {
 	return s.Repository.GetAllRegions()
+}
+
+func (s *Service) GetPcCountRegions() ([]models.TotalComputersCountRegions, error) {
+	return s.Repository.GetPcRegions()
 }
 
 func (s *Service) GetAllSums() (repository.TableSums, error) {
@@ -177,4 +209,23 @@ func (s *Service) DeleteInfo(id uint) error {
 
 func (s *Service) GetRegionsByRegionID(regionID uint) ([]repository.RegionWithTeacherInfo, error) {
 	return s.Repository.GetRegionsByRegionID(regionID)
+}
+func (s *Service) CreateTotalComputersCount(totalComputersCount *models.TotalComputersCount) error {
+	return s.Repository.CreateTotalComputersCount(totalComputersCount)
+}
+
+func (s *Service) CreateComputerModels(computerModel *models.ComputerModelType) error {
+	return s.Repository.CreateComputersModelType(computerModel)
+}
+
+func (s *Service) UpdateTotalComputersCount(totalComputersCount *models.TotalComputersCount) error {
+	return s.Repository.UpdateTotalComputersCount(totalComputersCount)
+}
+
+func (s *Service) GetCompCountByRegionID(regionID uint) ([]models.TotalComputersCount, error) {
+	return s.Repository.GetCompCountByRegionID(regionID)
+}
+
+func (s *Service) DeleteTotalComputersCount(id uint) error {
+	return s.Repository.DeleteTotalComputersCount(id)
 }

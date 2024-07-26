@@ -258,3 +258,184 @@ func (h *Handler) GetRegionsByRegionID(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(regions)
 }
+
+func (h *Handler) GetRegionTable1Archive(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetRegionTable1Archive()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving archive data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(archives)
+}
+
+func (h *Handler) GetRegionTable2Archive(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetRegionTable2Archive()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving archive data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(archives)
+}
+
+func (h *Handler) GetRegionTable3Archive(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetRegionTable3Archive()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving archive data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(archives)
+}
+
+func (h *Handler) GetFoundationArchive(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetFoundationArchive()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving archive data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(archives)
+}
+
+func (h *Handler) GetInfoArchivesHandler(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetInfoArchives()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Error retrieving archive data"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(archives)
+}
+
+func (h *Handler) GetArchivedTotalComputersCounts(w http.ResponseWriter, r *http.Request) {
+	archives, err := h.Service.GetArchivedTotalComputersCounts()
+	if err != nil {
+		http.Error(w, "Unable to fetch archived data", http.StatusInternalServerError)
+		return
+	}
+
+	// Преобразуем в JSON и отправляем
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(archives); err != nil {
+		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
+	}
+}
+
+func (h *Handler) GetArchivedComputerModelTypes(w http.ResponseWriter, r *http.Request) {
+	totalPCIdStr := mux.Vars(r)["totalPCId"]
+	totalPCId, err := strconv.ParseUint(totalPCIdStr, 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid totalPCId", http.StatusBadRequest)
+		return
+	}
+
+	archives, err := h.Service.GetArchivedComputerModelTypes(uint(totalPCId))
+	if err != nil {
+		http.Error(w, "Unable to fetch archived data", http.StatusInternalServerError)
+		return
+	}
+
+	// Преобразуем в JSON и отправляем
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(archives); err != nil {
+		http.Error(w, "Error encoding JSON", http.StatusInternalServerError)
+	}
+}
+
+func (h *Handler) CreateTotalComputersCount(w http.ResponseWriter, r *http.Request) {
+	var totalComputersCount models.TotalComputersCount
+	if err := json.NewDecoder(r.Body).Decode(&totalComputersCount); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Создаем запись в TotalComputersCount
+	if err := h.Service.CreateTotalComputersCount(&totalComputersCount); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// После успешного создания записи, создаем записи в ComputerModelType
+	for _, model := range totalComputersCount.CompModel {
+		model.TotalPCId = totalComputersCount.Id
+		if err := h.Service.CreateComputerModels(&model); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(totalComputersCount)
+}
+
+func (h *Handler) UpdateTotalComputersCount(w http.ResponseWriter, r *http.Request) {
+	var totalComputersCount models.TotalComputersCount
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+	totalComputersCount.Id = uint(id)
+
+	err = json.NewDecoder(r.Body).Decode(&totalComputersCount)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	err = h.Service.UpdateTotalComputersCount(&totalComputersCount)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(totalComputersCount)
+}
+
+func (h *Handler) GetCompCountByRegionID(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	regionID, err := strconv.Atoi(vars["region_id"])
+	if err != nil {
+		http.Error(w, "Invalid region ID", http.StatusBadRequest)
+		return
+	}
+
+	totalComputersCounts, err := h.Service.GetCompCountByRegionID(uint(regionID))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(totalComputersCounts)
+}
+
+func (h *Handler) DeleteTotalComputersCount(w http.ResponseWriter, r *http.Request) {
+	idStr := mux.Vars(r)["id"]
+	id, err := strconv.ParseUint(idStr, 10, 32)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.Service.DeleteTotalComputersCount(uint(id)); err != nil {
+		http.Error(w, "Unable to delete record", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
